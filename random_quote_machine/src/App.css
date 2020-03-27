@@ -1,0 +1,40 @@
+#root {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#content {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 2;
+}
+
+#quote-box {
+  display: grid;
+  grid-template-rows: 3fr 1fr 2fr;
+}
+
+#text {
+  font-size: 30px;
+}
+
+#author {
+  text-align: end;
+}
+
+#bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#quote {
+  display: flex;
+  grid-column-start: 2;
+}
+
+#new-quote {
+
+}
