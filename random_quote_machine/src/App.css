@@ -1,3 +1,18 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  background-color: rgb(255, 217, 15);
+}
+
 #root {
   height: 100%;
   display: grid;
@@ -14,10 +29,13 @@
 
 #quote-box {
   display: grid;
-  grid-template-rows: 3fr 1fr 2fr;
+  grid-template-rows: 4fr 1fr 1fr;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0 3em 3em 3em;
 }
 
 #text {
+  text-align: justify;
   font-size: 30px;
 }
 
@@ -32,9 +50,6 @@
 
 #quote {
   display: flex;
-  grid-column-start: 2;
-}
-
-#new-quote {
-
+  justify-content: flex-end;
+  align-items: flex-end;
 }
