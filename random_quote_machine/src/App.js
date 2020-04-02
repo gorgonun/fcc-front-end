@@ -40,18 +40,17 @@ class QuoteBox extends Component {
 
     render() {
         return (
-            <div id="quote-box">
+            <div id="quote-box" className="container">
                 <p id="text">{this.state.quote}</p>
                 <p id="author">{this.state.author}</p>
                 <div id="bottom">
                     <div id="social-networks">
-                        <a id="tweet-quote"></a>
+                        <a id="tweet-quote" href={`https://twitter.com/intent/tweet?text=${this.state.quote}`}>Tweet</a>
                     </div>
                     <div id="quote">
-                        <button id="new-quote" onClick={this.NewQuote}>New quote</button>
+                        <button id="new-quote" className="btn btn-warning" onClick={this.NewQuote}>New wisdom</button>
                     </div>
                 </div>
-                <a id="tweet-quote"/>
             </div>
         )
     }

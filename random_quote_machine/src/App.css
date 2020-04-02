@@ -1,18 +1,3 @@
-html {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
-  background-color: rgb(255, 217, 15);
-}
-
 #root {
   height: 100%;
   display: grid;
@@ -29,23 +14,26 @@ body {
 
 #quote-box {
   display: grid;
-  grid-template-rows: 4fr 1fr 1fr;
+  grid-template-rows: 4fr 1fr;
   background-color: rgba(255, 255, 255, 0.9);
-  padding: 0 3em 3em 3em;
+  padding: 3em;
 }
 
 #text {
   text-align: justify;
   font-size: 30px;
+  margin: 0;
 }
 
 #author {
+  margin: 1em;
   text-align: end;
 }
 
 #bottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
 }
 
 #quote {

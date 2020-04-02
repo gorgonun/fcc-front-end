@@ -1,1 +1,1 @@
-# fcc-front-end
+# Free Code Camp front-end projects
