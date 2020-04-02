@@ -1,0 +1,43 @@
+#root {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#content {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 2;
+}
+
+#quote-box {
+  display: grid;
+  grid-template-rows: 4fr 1fr;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 3em;
+}
+
+#text {
+  text-align: justify;
+  font-size: 30px;
+  margin: 0;
+}
+
+#author {
+  margin: 1em;
+  text-align: end;
+}
+
+#bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+#quote {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
