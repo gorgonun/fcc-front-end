@@ -4,24 +4,53 @@ import PropTypes from 'prop-types';
 import marked from 'marked'
 import DOMPurify from 'dompurify';
 
+const exampleText = "# Welcome\n" +
+    "---\n" +
+    "## This site\n" +
+    "This is [a beautiful](https://extra.globo.com/incoming/5891747-b0c-d6c/w448h673-PROP/xcantor.jpg.pagespeed.ic.iyLW8n2M3o.jpg) demonstration of markdown\n" +
+    "\n" +
+    "```Aleatory text```\n" +
+    "- Can you do this?\n" +
+    "\n" +
+    "![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png)\n" +
+    "**I am bold**"
+
 const Preview = (props) => {
     const sanitizedHtml = {__html: DOMPurify.sanitize(marked(props.text))};
     return (
-        <div id="preview" dangerouslySetInnerHTML={sanitizedHtml}/>
+        <div id="preview" className="container" dangerouslySetInnerHTML={sanitizedHtml} style={{width: `${props.size}%`}}/>
     );
 }
 
 Preview.propTypes = {
-    text: PropTypes.string.isRequired
+    text: PropTypes.string.isRequired,
+    size: PropTypes.number.isRequired
 }
 
-class Editor extends React.Component {
+const Editor = (props) => {
+    return (
+        <div id="editor-wrapper" className="container" style={{width: `${props.size}%`}}>
+            <textarea id="editor" onChange={props.updateText} value={props.text}/>
+        </div>
+    );
+}
+
+Editor.propTypes = {
+    text: PropTypes.string.isRequired,
+    updateText: PropTypes.func.isRequired,
+    size: PropTypes.number.isRequired
+}
+
+class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: "jjj"
+            text: exampleText,
+            editorSize: 50,
+            previewSize: 50
         }
         this.updateText = this.updateText.bind(this)
+        this.changeSize = this.changeSize.bind(this)
     }
 
     updateText(event) {
@@ -30,20 +59,24 @@ class Editor extends React.Component {
         })
     }
 
+    changeSize(event) {
+        this.setState({
+            editorSize: event.target.value,
+            previewSize: 100 - event.target.value
+        })
+    }
+
     render() {
         return (
             <Fragment>
-                <textarea id="editor" onChange={this.updateText} value={this.state.text}/>
-                <Preview text={this.state.text}/>
+                <div id="controller" >
+                    <input type="range" min="0" max="100" defaultValue="50" onChange={this.changeSize}/>
+                </div>
+                <div id="main">
+                    <Editor text={this.state.text} updateText={this.updateText} size={this.state.editorSize}/>
+                    <Preview text={this.state.text} size={this.state.previewSize}/>
+                </div>
             </Fragment>
-        )
-    }
-}
-
-class App extends React.Component {
-    render() {
-        return (
-            <Editor />
         );
     }
 }
