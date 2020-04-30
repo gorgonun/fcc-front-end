@@ -1,0 +1,30 @@
+#root {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#drum-machine {
+    display: flex;
+    flex-wrap: wrap;
+    width: 25vw;
+    height: 25vw;
+}
+
+#display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 100%;
+}
+
+.drum-pad {
+    display: flex;
+    flex-basis: 26%;
+    background: grey;
+    justify-content: center;
+    align-items: center;
+    margin: 1%;
+    flex-grow: 1;
+}
