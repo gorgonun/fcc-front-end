@@ -1,16 +1,22 @@
 #app {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    height: 25vw;
+    height: 40vw;
     width: 25vw;
+    background-color: grey;
+    border-radius: 10px;
 }
 
-#display{
+#top{
     grid-column-start: 1;
     grid-column-end: 5;
     background-color: black;
     color: white;
-    padding: 2%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    margin: 2%;
+    border-radius: 10px;
 }
 
 #clear{
@@ -28,9 +34,29 @@
 }
 
 .calcButton {
-    background-color: grey;
     padding: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
+    margin: 3%;
+}
+
+.calcButton:hover {
+    background-color: darkgrey;
+    -webkit-transition: background-color 500ms linear;
+    -ms-transition: background-color 500ms linear;
+    transition: background-color 500ms linear;
+}
+
+#raw {
+    padding: 1%;
+    min-height: 20px;
+}
+
+#display {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1%;
+    min-height: 20px;
 }

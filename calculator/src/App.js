@@ -1,10 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+const op = (w) => (f) => (e1, e2) => w(f(e1, e2))
+const sum = (e1, e2) => e1 + e2
+const dif = (e1, e2) => e1 - e2
+const mul = (e1, e2) => e1 * e2
+const div = (e1, e2) => e1 / e2
 
 const buttons = [
     ["AC", "clear"],
-    ["/", "divide"],
+    ["÷", "divide"],
     ["X", "multiply"],
     ["7", "seven"],
     ["8", "eight"],
@@ -13,14 +18,13 @@ const buttons = [
     ["4", "four"],
     ["5", "five"],
     ["6", "six"],
-    ["+", "sum"],
+    ["+", "add"],
     ["1", "one"],
     ["2", "two"],
     ["3", "three"],
     ["=", "equals"],
     ["0", "zero"],
     [".", "decimal"]
-
 ]
 
 const createButton = (display, id, onclickFn) => {
@@ -37,88 +41,113 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            display: "",
-            fn: (i) => this.changeResult((_) => i),
+            text: "",
             result: 0,
-            current: "",
-            prepared: false
+            operator: (i, j) => this.changeResult((_) => i + j),
+            firstTerm: "",
+            isDecimal: false,
+            finished: false
         }
 
-        this.changeDisplay = this.changeDisplay.bind(this)
-        this.changeFn = this.changeFn.bind(this)
-        this.changeResult = this.changeResult.bind(this)
-        this.changeCurrent = this.changeCurrent.bind(this)
-        this.changePrepared = this.changePrepared.bind(this)
+        this.changeIsDecimal = this.changeIsDecimal.bind(this)
+        this.changeText = this.changeText.bind(this)
+        this.changeFirstTerm = this.changeFirstTerm.bind(this)
     }
 
-    changeDisplay(callback) {
-        const newDisp = callback(this.state.display)
+    changeText(callback) {
+        const newText = callback(this.state.text)
         this.setState({
-            display: newDisp
+            text: newText
         })
     }
 
-    changeFn(callback) {
-        const newFn = callback(this.state.fn)
+    changeFinished(callback) {
+        const newFinished = callback(this.state.finished)
         this.setState({
-            fn: newFn
+            finished: newFinished
+        })
+    }
+
+    changeOperator(callback) {
+        const newFn = callback(this.state.operator)
+        this.setState({
+            operator: newFn
         })
     }
 
     changeResult(callback) {
-        const newR = callback(this. pastate.result)
-        console.log(newR)
+        const newR = callback(this.state.result)
         this.setState({
             result: newR
         })
     }
 
-    changeCurrent(callback) {
-        const newC = callback(this.state.current)
-        // console.log(newC)
+    changeIsDecimal(callback) {
+        const newDec = callback(this.state.isDecimal)
         this.setState({
-            current: newC
+            isDecimal: newDec
         })
     }
 
-    changePrepared(callback) {
-        const newP = callback(this.state.prepared)
+    changeFirstTerm(callback) {
+        const newT = callback(this.state.firstTerm)
+        if(newT.toString().split("").filter(s => s === ".").length > 1) return null
         this.setState({
-            prepared: newP
+            firstTerm: newT
         })
     }
 
     handle() {
         return (item) => () => {
-            const before = (f1) => (f2) => { f2(); return f1() }
-            const feedFn = (food) => this.changeFn((fn) => (fn(food)))
-            const substituteResult = (newR) => this.changeResult((_) => newR)
-            const appendFn = (i) => (current) => current + i
-            const ifPrepared = (fn) => this.state.prepared ? fn() : () => ""
-            const feedIfPrepared = (cb) => ifPrepared(() => {feedFn(parseInt(this.state.current)); this.changeCurrent((_) => ""); cb()})
-            const setPreparedAs = (isPrepared) => this.changePrepared((_) => isPrepared)
-            const addToDisplay = (i) => this.changeDisplay(appendFn(i))
-            const addToCurrent = (i) => this.changeCurrent(appendFn(i))
-            const clearDisplay = () => this.changeDisplay(() => "");
-            const feedAndChange = (newF) => (food) => this.changeFn((fn) => {fn(food); return newF})
+            const changingResult = op((v) => this.changeResult((_) => v))
+
+            const appendTo = (f, i) => f((current) => current + i)
+            const addToText = (i) => appendTo(this.changeText, i)
+            const addToTerm = (i) => { if(this.state.firstTerm === "") withMagnitude("+"); appendTo(this.changeFirstTerm, "" + i)}
+            const withMagnitude = (mg) => this.state.firstTerm === "" ? appendTo(this.changeFirstTerm, mg) : this.changeFirstTerm((t) => mg + t.substring(1))
+
+            const clearDisplay = () => this.changeText(() => "")
+            const clearResultIf = (b) => b ? this.changeResult(() => 0) : null
+            const clearTerm = () => this.changeFirstTerm((_) => "")
+            const resetOperator = () => (this.changeOperator((_) => (i, j) => this.changeResult((_) => i + j)))
+
+            const isFinished = (b) => this.changeFinished((_) => b)
+            const isDecimal = (b) => this.changeIsDecimal((_) => b)
+
+            const feedEvenOnFirstOp = () => this.state.operator(parseFloat(this.state.result), parseFloat(this.state.firstTerm === "" ? 0 : this.state.firstTerm))
+
+            const evaluate = () => {feedEvenOnFirstOp(); clearTerm()}
+            const operation = (i, f) => {
+                addToText(i)
+                evaluate()
+                this.changeOperator((_) => changingResult(f))
+            }
+            const magnitude = (mg) => {withMagnitude(mg); addToText(mg)}
+            const checkIfMagnitudeOrOperation = (i, f) => isNaN(parseFloat(this.state.firstTerm)) ? magnitude(i) : operation(i, f)
+
             switch (item) {
-                case "AC": clearDisplay(); break;
-                case "+": addToDisplay(item); feedAndChange(this.sum(substituteResult)(this.state.result))(parseInt(this.state.current)); break;
-                case "=": clearDisplay(); feedAndChange(() => this.state.result)(parseInt(this.state.current)); addToDisplay(this.state.result); break;
-                default: this.changeCurrent((_) => ""); addToDisplay(parseInt(item)); addToCurrent(parseInt(item));
+                case "AC": clearDisplay(); resetOperator(); clearTerm(); clearResultIf(true); isDecimal(false); break;
+                case "+": isFinished(false); checkIfMagnitudeOrOperation(item, sum); break;
+                case "-": isFinished(false); checkIfMagnitudeOrOperation(item, dif); break;
+                case "X": isFinished(false); operation("x", mul); break;
+                case "÷": isFinished(false); operation(item, div); break;
+                case "=": evaluate(); clearDisplay(); isFinished(true); resetOperator(); isDecimal(false); break;
+                case ".": addToText(item); addToTerm(item); clearResultIf(this.state.finished); isFinished(false); isDecimal(true); break;
+                default: addToText(item); addToTerm(item); clearResultIf(this.state.finished); isFinished(false);
             }
         }
     }
 
-    sum(wrapper) {
-        return (e1) => (e2) => wrapper(e1 + e2)
+    assureFloat(v) {
+        return this.state.isDecimal && Number.isInteger(v) ? v.toFixed(1) : v
     }
 
     render() {
         return (
             <div id="app">
-                <div id="display">
-                    <span>{this.state.display}</span>
+                <div id="top">
+                    <span id="raw">{this.state.text}</span>
+                    <span id="display">{this.state.finished || isNaN(parseFloat(this.state.firstTerm)) ? this.assureFloat(this.state.result) : this.assureFloat(parseFloat(this.state.firstTerm))}</span>
                 </div>
                 {createdButtons(this.handle())}
             </div>
